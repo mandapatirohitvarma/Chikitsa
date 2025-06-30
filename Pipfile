@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+huggingface-hub = "*"
+sentence-transformers = "*"
+pypdf = "*"
+langchain = "*"
+langchain-community = "*"
+langchain-huggingface = "*"
+faiss-cpu = "*"
+openai = "*"
+openai-whisper = "*"
+pydub = "*"
+flask = "*"
+flask-cors = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"

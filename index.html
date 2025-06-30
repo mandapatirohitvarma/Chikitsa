@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🩺 Medical Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <h2>💬 Chikitsa - Medical Assistant</h2>
+        <div id="chat-box" class="chat-box"></div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Type your question..." onkeydown="if(event.key === 'Enter') sendMessage()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById("user-input");
+            const chatBox = document.getElementById("chat-box");
+            const question = input.value.trim();
+            if (!question) return;
+
+            chatBox.innerHTML += `
+                <div class="msg-wrapper right">
+                    <div class="chat-bubble user">
+                        <div class="text">${question}</div>
+                        <div class="label">You</div>
+                    </div>
+                </div>
+            `;
+            input.value = "";
+
+            const typing = document.createElement("div");
+            typing.className = "msg-wrapper left";
+            typing.id = "typing";
+            typing.innerHTML = `
+                <div class="chat-bubble bot typing">
+                    <div class="text">Chikitsa is typing...</div>
+                </div>
+            `;
+            chatBox.appendChild(typing);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const res = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question })
+            });
+            const data = await res.json();
+
+            typing.remove();
+
+            chatBox.innerHTML += `
+                <div class="msg-wrapper left">
+                    <div class="chat-bubble bot">
+                        <div class="label">Chikitsa</div>
+                        <div class="text">${data.answer || "Error loading reply"}</div>
+                    </div>
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
